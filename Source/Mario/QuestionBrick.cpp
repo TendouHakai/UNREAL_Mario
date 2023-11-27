@@ -37,7 +37,6 @@ void AQuestionBrick::Tick(float DeltaTime)
 		}
 	}
 	else startTime += DeltaTime;
-
 }
 
 void AQuestionBrick::setState(int s)
@@ -57,8 +56,6 @@ void AQuestionBrick::setState(int s)
 		startTime = 0.f;
 
 		flipbookComponent->SetFlipbook(QUESTIONBRICK_EndAnimation);
-
-		UE_LOG(LogTemp, Warning, TEXT("state collect"));
 		break;
 	default:
 		break;
