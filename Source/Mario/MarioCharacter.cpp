@@ -53,7 +53,7 @@ AMarioCharacter::AMarioCharacter()
 	GetCharacterMovement()->AirControl = 1.0f;
 	GetCharacterMovement()->JumpZVelocity = 1500.f;
 	GetCharacterMovement()->GroundFriction = 3.0f;
-	GetCharacterMovement()->MaxWalkSpeed = MAXSPEED_RUN;
+	GetCharacterMovement()->MaxWalkSpeed = MAXSPEED_WALK;
 	GetCharacterMovement()->MaxAcceleration = 1200.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 1024.f;
 	GetCharacterMovement()->MaxFlySpeed = 600.0f;
@@ -95,7 +95,7 @@ UPaperFlipbook* AMarioCharacter::getAniSmallMario()
 	}
 	else {
 		if (GetCharacterMovement()->IsFalling()) {
-			if (FMath::Abs(PlayerVelocity.X) > MAXSPEED_WALK) {
+			if (FMath::Abs(PlayerVelocity.X) > MAXSPEED_WALK + 100.f) {
 				animation = SMALL_JumpRunAnimation;
 			}
 			else animation = SMALL_JumpWalkAnimation;
@@ -103,7 +103,7 @@ UPaperFlipbook* AMarioCharacter::getAniSmallMario()
 		}
 		else {
 			if (PlayerVelocity.X * PlayerAcceleration.X >= 0) {
-				if (FMath::Abs(PlayerVelocity.X) > MAXSPEED_WALK)
+				if (FMath::Abs(PlayerVelocity.X) > MAXSPEED_WALK + 100.f)
 					animation = SMALL_RunningAnimation;
 				else animation = FMath::Abs(PlayerVelocity.X) > 0.f ? SMALL_WalkingAnimation : SMALL_IdleAnimation;
 			}
@@ -124,7 +124,7 @@ UPaperFlipbook* AMarioCharacter::getAniBigMario()
 	}
 	else {
 		if (GetCharacterMovement()->IsFalling()) {
-			if (FMath::Abs(PlayerVelocity.X) > MAXSPEED_WALK) {
+			if (FMath::Abs(PlayerVelocity.X) < MAXSPEED_RUN) {
 				animation = BIG_JumpRunAnimation;
 			}
 			else animation = BIG_JumpWalkAnimation;
@@ -132,7 +132,7 @@ UPaperFlipbook* AMarioCharacter::getAniBigMario()
 		}
 		else {
 			if (PlayerVelocity.X * PlayerAcceleration.X >= 0) {
-				if (FMath::Abs(PlayerVelocity.X) > MAXSPEED_WALK)
+				if (FMath::Abs(PlayerVelocity.X) < MAXSPEED_RUN)
 					animation = SMALL_RunningAnimation;
 				else animation = FMath::Abs(PlayerVelocity.X) > 0.f ? BIG_WalkingAnimation : BIG_IdleAnimation;
 			}
@@ -214,6 +214,10 @@ void AMarioCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	// sit
 	PlayerInputComponent->BindAction("Sit", IE_Pressed, this, &AMarioCharacter::Sit);
 	PlayerInputComponent->BindAction("Sit", IE_Released, this, &AMarioCharacter::ReleaseSit);
+
+	// Accelerate
+	PlayerInputComponent->BindAction("Accelerate", IE_Pressed, this, &AMarioCharacter::Accelerate);
+	PlayerInputComponent->BindAction("Accelerate", IE_Released, this, &AMarioCharacter::releaseAccelerate);
 }
 
 void AMarioCharacter::MoveRight(float Value)
@@ -248,6 +252,16 @@ void AMarioCharacter::Sit()
 void AMarioCharacter::ReleaseSit()
 {
 	IsSit = false;
+}
+
+void AMarioCharacter::Accelerate()
+{
+	GetCharacterMovement()->MaxWalkSpeed = MAXSPEED_RUN;
+}
+
+void AMarioCharacter::releaseAccelerate()
+{
+	GetCharacterMovement()->MaxWalkSpeed = MAXSPEED_WALK;
 }
 
 void AMarioCharacter::UpdateCharacter()

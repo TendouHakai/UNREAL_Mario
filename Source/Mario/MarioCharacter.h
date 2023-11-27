@@ -6,7 +6,7 @@
 #include "PaperCharacter.h"
 #include "MarioCharacter.generated.h"
 
-#define MAXSPEED_WALK 1000.f
+#define MAXSPEED_WALK 800.f
 #define MAXSPEED_RUN 1200.f
 
 #define MARIO_LEVEL_SMALL	1
@@ -134,6 +134,10 @@ protected:
 	void Sit();
 
 	void ReleaseSit();
+
+	void Accelerate();
+
+	void releaseAccelerate();
 
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
