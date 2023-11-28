@@ -3,6 +3,7 @@
 
 #include "QuestionBrick.h"
 #include "MarioCharacter.h"
+#include "Coin.h"
 
 AQuestionBrick::AQuestionBrick() {
 
@@ -43,6 +44,9 @@ void AQuestionBrick::setState(int s)
 {
 	if (this->state == s) return;
 
+	ACoin* object = nullptr;
+
+	FVector location = this->GetTransform().GetLocation();
 	
 	switch (s)
 	{
@@ -51,8 +55,21 @@ void AQuestionBrick::setState(int s)
 		z = this->GetActorTransform().GetLocation().Z;
 		break;
 	case QUESTIONBRICK_STATE_COLLECTED:
+		if (type == TYPE_QUESTIONBRICK::Coin) {
+			location.Z += 50.f;
+			object = Cast<ACoin>(GetWorld()->SpawnActor<AActor>(coinObject, location, FRotator(0.f, 0.f, 0.f)));
+			if (object != nullptr) {
+				object->setType(TYPE_COIN::GENERATE);
+			}
+		}
+		else {
+			UE_LOG(LogTemp, Warning, TEXT("Spawn mushroom"));
+			GetWorld()->SpawnActor<ACharacter>(mushroomObject, location, FRotator(0.f, 0.f, 0.f));
+		}
+
+
 		boxComponent->SetSimulatePhysics(true);
-		boxComponent->AddImpulse(FVector(0.f, 0.f, 500.f), NAME_None, true);
+		boxComponent->AddImpulse(FVector(0.f, 0.f, 350.f), NAME_None, true);
 		startTime = 0.f;
 
 		flipbookComponent->SetFlipbook(QUESTIONBRICK_EndAnimation);
@@ -69,8 +86,7 @@ void AQuestionBrick::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 {
 	AMarioCharacter* mario = Cast<AMarioCharacter>(OtherActor);
 	if (mario != nullptr) {
-		UE_LOG(LogTemp, Warning, TEXT("Mario Collision"));
-
+		UE_LOG(LogTemp, Warning, TEXT("Mario Collision with question Brick"));
 		setState(QUESTIONBRICK_STATE_COLLECTED);
 	}
 }

@@ -28,7 +28,7 @@ void APopupText::BeginPlay()
 	Super::BeginPlay();
 	
 	boxComponent->SetSimulatePhysics(true);
-	boxComponent->AddImpulse(FVector(0.f, 0.f, 700.f), NAME_None, true);
+	boxComponent->AddImpulse(FVector(0.f, 0.f, 800.f), NAME_None, true);
 
 	textComponent->SetText(FString::FromInt(Number));
 	

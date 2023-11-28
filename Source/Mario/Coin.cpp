@@ -27,31 +27,34 @@ void ACoin::BeginPlay()
 	AActor::BeginPlay();
 
 	boxComponent->OnComponentBeginOverlap.AddDynamic(this, &ACoin::OnOverlapBegin);
+	boxComponent->OnComponentHit.AddDynamic(this, &ACoin::OnHit);
+	setState(STATE_COIN::START);
 }
 
 // Called every frame
 void ACoin::Tick(float DeltaTime)
 {
 	AActor::Tick(DeltaTime);
-
-
 }
 
 void ACoin::setState(int s)
 {
-	if (this->state == s) return;
-
 	APopupText* text = nullptr;
 
 	switch (s)
 	{
 	case STATE_COIN::START:
+		if (type == TYPE_COIN::GENERATE) {
+			boxComponent->SetCollisionProfileName(FName("BlockAll"));
+			boxComponent->SetSimulatePhysics(true);
+
+			boxComponent->AddImpulse(FVector(0.f, 0.f, 700.f), NAME_None, true);
+		}
 		break;
 	case STATE_COIN::COLLECTED:
 		text = Cast<APopupText>(GetWorld()->SpawnActor<AActor>(textObject,
 			this->GetTransform().GetLocation(), FRotator(0.f, 0.f, 0.f)));
 		if (text != nullptr) {
-			UE_LOG(LogTemp, Warning, TEXT("run"));
 			text->setNumber(coinNumber);
 		}
 		this->Destroy();
@@ -74,3 +77,11 @@ void ACoin::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherAct
 	}
 }
 
+void ACoin::OnHit(
+	UPrimitiveComponent* HitComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, FVector NormalImpulse,
+	const FHitResult& Hit)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Collect coin 2"));
+	setState(STATE_COIN::COLLECTED);
+}
