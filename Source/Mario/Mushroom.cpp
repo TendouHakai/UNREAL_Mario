@@ -4,6 +4,7 @@
 #include "Mushroom.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "MarioCharacter.h"
 
 AMushroom::AMushroom()
 {
@@ -14,6 +15,10 @@ AMushroom::AMushroom()
 void AMushroom::BeginPlay() {
 	Super::BeginPlay();
 
+	OnActorHit.AddDynamic(this, &AMushroom::OnHit);
+
+	//GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &AMushroom::OnHit);
+
 	setState(STATE_MUSHROOM::Start);
 }
 
@@ -23,28 +28,43 @@ void AMushroom::Tick(float DeltaTime)
 
 
 	if (this->state == STATE_MUSHROOM::Start) {
-		UE_LOG(LogTemp, Warning, TEXT("run"));
 		AddMovementInput(FVector(0.0f, 0.0f, 1.0f), 5);
 		if (this->GetTransform().GetLocation().Z > z) {
 			setState(STATE_MUSHROOM::Run);
 		}
 	}
-	else AddMovementInput(FVector(1.0f, 0.0f, 0.0f), 1.5);
+	else {
+		AddMovementInput(FVector(direct, 0.0f, 0.0f), 1.5);
+
+		UE_LOG(LogTemp, Warning, TEXT("%f"), GetCharacterMovement()->GravityScale);
+	}
 
 	
 }
 
 void AMushroom::setState(int s)
 {
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	FVector PlayerLocation;
+	if (PlayerController != nullptr) {
+		PlayerLocation = PlayerController->GetPawn()->GetActorLocation();
+	}
+
 	switch (s)
 	{
 	case STATE_MUSHROOM::Start:
+		GetCharacterMovement()->SetMovementMode(MOVE_Flying);
 		z = this->GetTransform().GetLocation().Z + 100.f;
 
 		break;
 	case STATE_MUSHROOM::Run:
+		if (PlayerLocation.X > GetActorLocation().X) {
+			direct = -1.0f;
+		}
+		
 		GetCapsuleComponent()->SetCollisionProfileName(FName("Pawn"));
-		GetCharacterMovement()->MovementMode = MOVE_Walking;
+		//GetCharacterMovement()->SetGroundMovementMode(MOVE_Walking);
+		GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 		GetCharacterMovement()->GravityScale = 1.0f;
 
 		//boxComponent->SetPhysicsLinearVelocity(FVector(1.f, 0.f, 0.f));
@@ -57,3 +77,26 @@ void AMushroom::setState(int s)
 
 	BaseObject::setState(s);
 }
+
+void AMushroom::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
+{
+	AMarioCharacter* mario = Cast<AMarioCharacter>(OtherActor);
+	if (mario != nullptr) {
+
+		mario->setLevel(MARIO_LEVEL_BIG);
+
+		this->Destroy();
+	}
+}
+
+void AMushroom::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	AMarioCharacter* mario = Cast<AMarioCharacter>(OtherActor);
+	if (mario != nullptr) {
+
+		mario->setLevel(MARIO_LEVEL_BIG);
+
+		this->Destroy();
+	}
+}
+

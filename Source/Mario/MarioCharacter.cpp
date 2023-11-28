@@ -124,7 +124,7 @@ UPaperFlipbook* AMarioCharacter::getAniBigMario()
 	}
 	else {
 		if (GetCharacterMovement()->IsFalling()) {
-			if (FMath::Abs(PlayerVelocity.X) < MAXSPEED_RUN) {
+			if (FMath::Abs(PlayerVelocity.X) > MAXSPEED_WALK + 100.f) {
 				animation = BIG_JumpRunAnimation;
 			}
 			else animation = BIG_JumpWalkAnimation;
@@ -132,8 +132,8 @@ UPaperFlipbook* AMarioCharacter::getAniBigMario()
 		}
 		else {
 			if (PlayerVelocity.X * PlayerAcceleration.X >= 0) {
-				if (FMath::Abs(PlayerVelocity.X) < MAXSPEED_RUN)
-					animation = SMALL_RunningAnimation;
+				if (FMath::Abs(PlayerVelocity.X) > MAXSPEED_WALK + 100.f)
+					animation = BIG_RunningAnimation;
 				else animation = FMath::Abs(PlayerVelocity.X) > 0.f ? BIG_WalkingAnimation : BIG_IdleAnimation;
 			}
 			else animation = BIG_TurnAnimation;
@@ -285,3 +285,16 @@ void AMarioCharacter::UpdateCharacter()
 		}
 	}
 }
+
+// LEVEL
+void AMarioCharacter::setLevel(int level)
+{
+	if (level < MAX_level && level != 0) {
+		this->Level = level;
+		if (this->Level > MARIO_LEVEL_SMALL) {
+			GetCapsuleComponent()->SetCapsuleHalfHeight(BIG_MARIO_HEIGHT	);
+			GetCapsuleComponent()->SetCapsuleRadius(40.0f);
+		}
+	}
+}
+

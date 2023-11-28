@@ -43,6 +43,9 @@ class AMarioCharacter : public APaperCharacter
 
 	virtual void Tick(float DeltaSeconds) override;
 protected:
+	int MAX_level = 3;
+
+protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = character)
 		bool IsSit;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = character)
@@ -120,6 +123,7 @@ protected:
 	UPaperFlipbook* getAniRaccoonMario();
 	void UpdateAnimation();
 
+	//MOVEMENT
 	/** Called for side to side input */
 	void MoveRight(float Value);
 
@@ -142,7 +146,6 @@ protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End of APawn interface
-
 public:
 	AMarioCharacter();
 
@@ -150,4 +153,6 @@ public:
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+
+	void setLevel(int level);
 };
