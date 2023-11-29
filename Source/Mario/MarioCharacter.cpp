@@ -298,3 +298,8 @@ void AMarioCharacter::setLevel(int level)
 	}
 }
 
+void AMarioCharacter::CauseDamage()
+{
+	GetCharacterMovement()->AddImpulse(FVector(0.f,0.f,500.f), true);
+}
+

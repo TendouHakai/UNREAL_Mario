@@ -155,4 +155,6 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
 	void setLevel(int level);
+
+	void CauseDamage();
 };
