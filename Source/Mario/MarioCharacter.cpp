@@ -54,8 +54,8 @@ AMarioCharacter::AMarioCharacter()
 	GetCharacterMovement()->JumpZVelocity = 1500.f;
 	GetCharacterMovement()->GroundFriction = 3.0f;
 	GetCharacterMovement()->MaxWalkSpeed = MAXSPEED_WALK;
-	GetCharacterMovement()->MaxAcceleration = 1200.f;
-	GetCharacterMovement()->BrakingDecelerationWalking = 1024.f;
+	GetCharacterMovement()->MaxAcceleration = 3000.f;
+	//GetCharacterMovement()->BrakingDecelerationWalking = 1024.f;
 	GetCharacterMovement()->MaxFlySpeed = 600.0f;
 
 	// Lock character motion onto the XZ plane, so the character can't move in or out of the screen
@@ -174,7 +174,10 @@ UPaperFlipbook* AMarioCharacter::getAniRaccoonMario()
 void AMarioCharacter::UpdateAnimation()
 {
 	UPaperFlipbook* animation = nullptr;
-	if (Level == MARIO_LEVEL_SMALL) {
+	if (isDead) {
+		animation = SMALL_DIEAnimation;
+	}
+	else if (Level == MARIO_LEVEL_SMALL) {
 		animation = getAniSmallMario();
 	}
 	else if (Level == MARIO_LEVEL_BIG) {
@@ -222,8 +225,6 @@ void AMarioCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 
 void AMarioCharacter::MoveRight(float Value)
 {
-	/*UpdateChar();*/
-
 	// Apply the input to the character motion
 	if(!IsSit)
 		AddMovementInput(FVector(1.0f, 0.0f, 0.0f), Value);
@@ -303,3 +304,19 @@ void AMarioCharacter::CauseDamage()
 	GetCharacterMovement()->AddImpulse(FVector(0.f,0.f,500.f), true);
 }
 
+void AMarioCharacter::TakeDamage(int damge)
+{
+	this->Level -= damge;
+	if (this->Level <= 0) {
+		Dead();
+	}
+}
+
+void AMarioCharacter::Dead()
+{
+	this->isDead = true;
+
+	GetCharacterMovement()->StopMovementImmediately();
+	GetCharacterMovement()->AddImpulse(FVector(0.f, 0.f, 1000.f), true);
+	GetCapsuleComponent()->SetCollisionProfileName(FName(TEXT("NoCollision")));
+}

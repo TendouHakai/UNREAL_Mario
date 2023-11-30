@@ -3,33 +3,39 @@
 
 #include "GroundEnemyBase.h"
 #include "MarioCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "DrawDebugHelpers.h"
 
 
 AGroundEnemyBase::AGroundEnemyBase()
 {
-	boxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
-	boxComponent->SetupAttachment(RootComponent);
+	GetCharacterMovement()->MaxWalkSpeed = 300.f;
+
+	GetCapsuleComponent()->SetCollisionProfileName(FName("OverlapOnlyPawn"));
+
+	boxCheckFrontComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCheckFront"));
+	boxCheckFrontComponent->SetupAttachment(RootComponent);
+
+	boxCheckFlatformComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCheckFlatform"));
+	boxCheckFlatformComponent->SetupAttachment(RootComponent);
+
+	// check
+	checkfrontComponent = CreateDefaultSubobject<UCheckFrontComponent>(TEXT("checkFrontCode"));
+	checkfrontComponent->setBoxComponent(boxCheckFrontComponent);
+
+	checkPlatformComponent = CreateDefaultSubobject<UCheckFlatformComponent>(TEXT("checkFlatform"));
+	checkPlatformComponent->setBoxComponent(boxCheckFlatformComponent);
 }
 
 void AGroundEnemyBase::BeginPlay() {
 	Super::BeginPlay();
-
-	boxComponent->OnComponentHit.AddDynamic(this, &AGroundEnemyBase::OnHit);
-	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AGroundEnemyBase::OnOverlapBegin);
-	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &AGroundEnemyBase::OnOverlapEnd);
-
-
-
-	isDead = false;
-	direct = 1.0f;
 }
 
 void AGroundEnemyBase::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	Move();
 }
 
 void AGroundEnemyBase::setState(int s)
@@ -44,38 +50,28 @@ void AGroundEnemyBase::Move()
 	}
 }
 
-void AGroundEnemyBase::TakeDamge()
+void AGroundEnemyBase::takeDamage()
 {
-
+	this->Dead();
 }
 
 void AGroundEnemyBase::Dead()
 {
-	Super::Dead();
+	UE_LOG(LogTemp, Warning, TEXT("Dead 2"));
+	isDead = true;
+
+	FTimerHandle MyTimerHandle;
+	GetWorldTimerManager().SetTimer(MyTimerHandle, [this]() {
+		Super::Dead();
+	}, 2.0f, false);
 }
 
-void AGroundEnemyBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+UPaperFlipbook* AGroundEnemyBase::getAnimation()
 {
-	AMarioCharacter* mario = Cast<AMarioCharacter>(OtherActor);
-	if (mario!= nullptr) {
-		boxComponent->SetCollisionProfileName(FName(TEXT("NoCollision")));
+	UPaperFlipbook* ani = nullptr;
+	if (isDead) {
+		ani = DIE_Animation;
 	}
-}
-
-void AGroundEnemyBase::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	AMarioCharacter* mario = Cast<AMarioCharacter>(OtherActor);
-	if (mario != nullptr) {
-		boxComponent->SetCollisionProfileName(FName(TEXT("BlockAllDynamic")));
-	}
-}
-
-void AGroundEnemyBase::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
-	AMarioCharacter* mario = Cast<AMarioCharacter>(OtherActor);
-	if (mario != nullptr) {
-		mario->CauseDamage();
-
-		this->Destroy();
-	}
+	else ani = IDLE_Animation;
+	return ani;
 }

@@ -7,6 +7,7 @@
 
 #include "BaseObject.h"
 #include "PopupText.h"
+#include "Components/BoxComponent.h"
 
 #include "EnemyBase.generated.h"
 
@@ -23,11 +24,22 @@ protected:
 	float Speed;
 	int coin;
 	bool isDead = false;
+	int direct;
 
 public:
 	AEnemyBase();
 	UPROPERTY(EditAnyWhere, Category = PopUpText)
 		TSubclassOf<AActor> textObject;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = UpCollision, meta = (AllowPrivateAccess = "true"))
+		UBoxComponent* boxComponent;
+
+	// ANIMATION
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+		class UPaperFlipbook* IDLE_Animation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+		class UPaperFlipbook* DIE_Animation;
 
 protected:
 	virtual void BeginPlay() override;
@@ -37,9 +49,29 @@ public:
 
 	virtual void setState(int s) override;
 
-	void Move();
+	virtual void Move();
+	virtual int getDirect();
+	virtual void setDirect(int d);
 
-	void TakeDamge();
+	virtual void takeDamage();
 
-	void Dead();
+	virtual void Dead();
+
+	virtual UPaperFlipbook* getAnimation();
+	virtual void updateAnimation();
+
+	UFUNCTION()
+		void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+			const FHitResult& SweepResult);
+
+	UFUNCTION()
+		void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION()
+		void OnHit(
+			UPrimitiveComponent* HitComponent, AActor* OtherActor,
+			UPrimitiveComponent* OtherComp, FVector NormalImpulse,
+			const FHitResult& Hit);
 };

@@ -44,6 +44,7 @@ class AMarioCharacter : public APaperCharacter
 	virtual void Tick(float DeltaSeconds) override;
 protected:
 	int MAX_level = 3;
+	bool isDead = false;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = character)
@@ -72,6 +73,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 		class UPaperFlipbook* SMALLSitAnimation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+		class UPaperFlipbook* SMALL_DIEAnimation;
 
 	// BIGMARIO
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
@@ -157,4 +161,6 @@ public:
 	void setLevel(int level);
 
 	void CauseDamage();
+	void TakeDamage(int damge);
+	void Dead();
 };

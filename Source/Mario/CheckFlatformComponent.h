@@ -5,33 +5,39 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Components/BoxComponent.h"
-#include "CheckFrontComponent.generated.h"
+#include "CheckFlatformComponent.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class MARIO_API UCheckFrontComponent : public UActorComponent
+class MARIO_API UCheckFlatformComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UCheckFrontComponent();
+	UCheckFlatformComponent();
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 	UPROPERTY();
-		UBoxComponent* box;
+	UBoxComponent* box;
+
+	//UPROPERTY();
+	//AGroundEnemyBase* enemy;
 
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION()
-		void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
-			const FHitResult& SweepResult);
+		void OnComponentEndOverlap(
+			UPrimitiveComponent* OverlappedComponent,
+			AActor* OtherActor,
+			UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex
+		);
 
 	UFUNCTION()
 		void setBoxComponent(UBoxComponent* boxcomponent);

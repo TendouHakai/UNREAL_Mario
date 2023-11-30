@@ -6,6 +6,8 @@
 #include "EnemyBase.h"
 
 #include "Components/BoxComponent.h"
+#include "CheckFrontComponent.h"
+#include "CheckFlatformComponent.h"
 
 #include "GroundEnemyBase.generated.h"
 
@@ -16,22 +18,22 @@ UCLASS()
 class MARIO_API AGroundEnemyBase : public AEnemyBase
 {
 	GENERATED_BODY()
-
-protected:
-	int direct;
 public:
 	AGroundEnemyBase();
-	// ANIMATION
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
-		class UPaperFlipbook* GROUNDENEMY_WalkAnimation;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
-		class UPaperFlipbook* GROUNDENEMY_DieAnimation;
 
 	// BOX COLLIDER
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = UpCollision, meta = (AllowPrivateAccess = "true"))
-		UBoxComponent* boxComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = CheckfrontCollision, meta = (AllowPrivateAccess = "true"))
+		UBoxComponent* boxCheckFrontComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = CheckFlatformCollision, meta = (AllowPrivateAccess = "true"))
+		UBoxComponent* boxCheckFlatformComponent;
 
+	// CHECK FRONT COMPONENT
+	UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = CheckfrontCollision, meta = (AllowPrivateAccess = "true"))
+		UCheckFrontComponent* checkfrontComponent;
+
+	// CHECK FLATFORM
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = CheckflatformCollision, meta = (AllowPrivateAccess = "true"))
+		UCheckFlatformComponent* checkPlatformComponent;
 protected:
 	virtual void BeginPlay() override;
 
@@ -41,24 +43,12 @@ public:
 
 	virtual void setState(int s) override;
 
-	void Move();
+	// MOVE
+	virtual void Move() override;
 
-	void TakeDamge();
+	virtual void takeDamage() override;
 
-	void Dead();
+	virtual void Dead() override;
 
-	UFUNCTION()
-		void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
-			const FHitResult& SweepResult);
-		
-	UFUNCTION()
-		void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, 
-			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
-	UFUNCTION()
-		void OnHit(
-			UPrimitiveComponent* HitComponent, AActor* OtherActor,
-			UPrimitiveComponent* OtherComp, FVector NormalImpulse,
-			const FHitResult& Hit);
+	virtual UPaperFlipbook* getAnimation();
 };
