@@ -8,6 +8,9 @@
 #include "MarioCharacter.h"
 
 AEnemyBase::AEnemyBase() {
+
+	GetCapsuleComponent()->SetCollisionProfileName(FName("OverlapOnlyPawn"));
+
 	boxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
 	boxComponent->SetupAttachment(RootComponent);
 	boxComponent->SetCollisionProfileName(FName("BlockAllDynamic"));
@@ -68,7 +71,14 @@ void AEnemyBase::takeDamage()
 void AEnemyBase::Dead()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Dead"));
-	this->Destroy();
+	isDead = true;
+	boxComponent->SetCollisionProfileName(FName("NoCollision"));
+	GetCapsuleComponent()->SetCollisionProfileName(FName("NoCollision"));
+	GetCharacterMovement()->GravityScale = 0.f;
+	FTimerHandle MyTimerHandle;
+	GetWorldTimerManager().SetTimer(MyTimerHandle, [this]() {
+		this->Destroy();
+	}, 1.5f, false);
 }
 
 UPaperFlipbook* AEnemyBase::getAnimation()

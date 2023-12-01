@@ -57,13 +57,15 @@ void AGroundEnemyBase::takeDamage()
 
 void AGroundEnemyBase::Dead()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Dead 2"));
+	/*UE_LOG(LogTemp, Warning, TEXT("Dead 2"));
 	isDead = true;
 
 	FTimerHandle MyTimerHandle;
 	GetWorldTimerManager().SetTimer(MyTimerHandle, [this]() {
 		Super::Dead();
-	}, 2.0f, false);
+	}, 2.0f, false);*/
+
+	Super::Dead();
 }
 
 UPaperFlipbook* AGroundEnemyBase::getAnimation()
