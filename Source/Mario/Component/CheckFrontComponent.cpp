@@ -2,8 +2,8 @@
 
 
 #include "CheckFrontComponent.h"
-#include "GroundEnemyBase.h"
-#include "EnemyBase.h"
+#include "../Enemy/GroundEnemy/GroundEnemyBase.h"
+#include "../Enemy/EnemyBase.h"
 
 // Sets default values for this component's properties
 UCheckFrontComponent::UCheckFrontComponent()

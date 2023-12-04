@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/SphereComponent.h"
 #include "PaperFlipbookComponent.h"
-#include "BaseObject.h"
+#include "../BaseObject.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
 #include "BulletBase.generated.h"

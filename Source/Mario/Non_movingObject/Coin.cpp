@@ -2,7 +2,8 @@
 
 
 #include "Coin.h"
-#include "MarioCharacter.h"
+#include "../MarioCharacter.h"
+#include "../MarioHUD.h"
 
 // Sets default values
 ACoin::ACoin()
@@ -69,10 +70,13 @@ void ACoin::setState(int s)
 void ACoin::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	AMarioCharacter* mario = Cast<AMarioCharacter>(OtherActor);
+	AMarioHUD* hud = Cast<AMarioHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 
 	if (mario != nullptr) {
 		UE_LOG(LogTemp, Warning, TEXT("Collect coin"));
-
+		if (hud != nullptr) {
+			hud->addCoin(1);
+		}
 		setState(STATE_COIN::COLLECTED);
 	}
 }
@@ -82,6 +86,11 @@ void ACoin::OnHit(
 	UPrimitiveComponent* OtherComp, FVector NormalImpulse,
 	const FHitResult& Hit)
 {
+	AMarioHUD* hud = Cast<AMarioHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	UE_LOG(LogTemp, Warning, TEXT("Collect coin 2"));
+	if (hud != nullptr) {
+		UE_LOG(LogTemp, Warning, TEXT("Add coin"));
+		hud->addCoin(1);
+	}
 	setState(STATE_COIN::COLLECTED);
 }

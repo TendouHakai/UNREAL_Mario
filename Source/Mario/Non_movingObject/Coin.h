@@ -7,7 +7,8 @@
 
 #include "Components/BoxComponent.h"
 #include "PaperFlipbookComponent.h"
-#include "BaseObject.h"
+//#include "BaseObject.h"
+#include "../BaseObject.h"
 #include "PopupText.h"
 
 #include "Coin.generated.h"

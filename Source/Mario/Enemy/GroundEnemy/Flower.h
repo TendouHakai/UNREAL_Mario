@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "EnemyBase.h"
+#include "../EnemyBase.h"
 #include "Components/ArrowComponent.h"
 
 #include "Flower.generated.h"

@@ -5,7 +5,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "PaperFlipbookComponent.h"
-#include "MarioCharacter.h"
+#include "../MarioCharacter.h"
 
 AEnemyBase::AEnemyBase() {
 

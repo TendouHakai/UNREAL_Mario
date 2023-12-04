@@ -2,7 +2,7 @@
 
 
 #include "BulletBase.h"
-#include "MarioCharacter.h"
+#include "../MarioCharacter.h"
 
 // Sets default values
 ABulletBase::ABulletBase()

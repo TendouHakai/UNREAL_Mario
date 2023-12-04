@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "EnemyBase.h"
+#include "../EnemyBase.h"
 
 #include "Components/BoxComponent.h"
-#include "CheckFrontComponent.h"
-#include "CheckFlatformComponent.h"
+#include "../../Component/CheckFlatformComponent.h"
+#include "../../Component/CheckFrontComponent.h"
 
 #include "GroundEnemyBase.generated.h"
 

@@ -2,7 +2,7 @@
 
 
 #include "GroundEnemyBase.h"
-#include "MarioCharacter.h"
+#include "../../MarioCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "DrawDebugHelpers.h"

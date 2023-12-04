@@ -8,7 +8,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/TextRenderComponent.h"
 
-#include "BaseObject.h"
+#include "../BaseObject.h"
 
 #include "PopupText.generated.h"
 

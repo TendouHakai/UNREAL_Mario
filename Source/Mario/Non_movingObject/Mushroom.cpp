@@ -4,7 +4,8 @@
 #include "Mushroom.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "MarioCharacter.h"
+#include "GameFramework/PlayerController.h"
+#include "../MarioCharacter.h"
 
 AMushroom::AMushroom()
 {

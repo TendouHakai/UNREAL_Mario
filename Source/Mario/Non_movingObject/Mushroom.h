@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
 
-#include "BaseObject.h"
+#include "../BaseObject.h"
 
 #include "Mushroom.generated.h"
 

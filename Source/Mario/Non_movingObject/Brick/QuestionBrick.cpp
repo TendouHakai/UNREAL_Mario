@@ -2,8 +2,8 @@
 
 
 #include "QuestionBrick.h"
-#include "MarioCharacter.h"
-#include "Coin.h"
+#include "../../MarioCharacter.h"
+#include "../Coin.h"
 
 AQuestionBrick::AQuestionBrick() {
 

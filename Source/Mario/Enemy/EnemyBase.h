@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
 
-#include "BaseObject.h"
-#include "PopupText.h"
+#include "../BaseObject.h"
+#include "../Non_movingObject/PopupText.h"
 #include "Components/BoxComponent.h"
 
 #include "EnemyBase.generated.h"

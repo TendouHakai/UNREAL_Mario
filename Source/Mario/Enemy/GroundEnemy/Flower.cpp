@@ -3,8 +3,9 @@
 
 #include "Flower.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "BulletBase.h"
-#include "MarioCharacter.h"
+#include "GameFramework/PlayerController.h"
+#include "../../Bullet/BulletBase.h"
+#include "../../MarioCharacter.h"
 
 AFlower::AFlower()
 {

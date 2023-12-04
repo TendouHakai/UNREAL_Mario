@@ -2,7 +2,7 @@
 
 
 #include "CheckFlatformComponent.h"
-#include "EnemyBase.h"
+#include "../Enemy/EnemyBase.h"
 
 // Sets default values for this component's properties
 UCheckFlatformComponent::UCheckFlatformComponent()
